@@ -3,10 +3,10 @@ import ReactDOM from 'react-dom';
 import '../scss/main.scss';
 import '../assets/dog.jpg';
 
-import Cropper from './Cropper.jsx';
+import CroppingTool from './CroppingTool.jsx';
 
 
 ReactDOM.render(
-    <Cropper />,
+    <CroppingTool />,
     document.getElementById('cropper')
 )
