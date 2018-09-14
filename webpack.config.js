@@ -19,7 +19,13 @@ const config = {
             {
                 test: /\.(js|jsx)$/,
                 exclude: /node_modules/,
-                use: 'babel-loader'
+                loader: 'babel-loader',
+                options: {
+                    presets: ["env", "react", "es2016"],
+                    plugins: [
+                        require('babel-plugin-transform-runtime')
+                    ]
+                }
             },
             {
                 // CSS Loader

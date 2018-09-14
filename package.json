@@ -10,17 +10,12 @@
     "dev": "webpack --watch --mode development --hide-modules",
     "build": "webpack --mode production --hide-modules"
   },
-  "babel": {
-    "presets": [
-      "env",
-      "react",
-      "es2016"
-    ]
-  },
   "devDependencies": {
     "autoprefixer": "^9.0.1",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.5",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-es2016": "^6.24.1",
     "babel-preset-react": "^6.24.1",
@@ -37,9 +32,9 @@
     "webpack-dev-server": "^3.1.7"
   },
   "dependencies": {
-    "cropperjs": "^1.4.1",
     "element-react": "^1.4.20",
     "react": "^16.4.1",
-    "react-dom": "^16.4.1"
+    "react-dom": "^16.4.1",
+    "react-image-crop": "^4.0.3"
   }
 }

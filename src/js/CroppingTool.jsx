@@ -1,48 +1,50 @@
 import React from 'react';
-import Cropper from 'cropperjs';
+import ReactCrop from 'react-image-crop';
 import { Button } from 'element-react';
+
+import { getCroppedImg } from './utils.js';
 
 class CroppingTool extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            imagePreview: null
+            imgData: null,
+            pixelCrop: {},
+            cropSettings: {
+                aspect: 1 / 1,
+            }
         }
 
         this.handleUpload = this.handleUpload.bind(this);
-        this.initializeCropper = this.initializeCropper.bind(this);
-        this.clearCropper = this.clearCropper.bind(this);
-        this.getImageCrop = this.getImageCrop.bind(this);
+        this.createImgCrop = this.createImgCrop.bind(this);
     }
 
     render() {
         return (
-            <div>
-                {/* Cropper Preview */}
-                <div className="cropper-preview">
-                    <img id="imagePreview" src={this.state.image} />
-                </div>
-                {/* Cropper Upload */}
-                {!this.state.imagePreview ?
-                    <div className="upload-img">
-                        <label htmlFor="upload-photo" className="el-button el-button--primary">
-                            Upload
-                        </label>
-                        <input id="upload-photo"
-                            className="upload-img__input"
-                            accept=".jpg,.png"
-                            type="file"
-                            onChange={(e) => this.handleUpload(e)}
-                            name="photo" />
+            <div className="cropper">
+                {this.state.imgData ?
+                    <div>
+                        <ReactCrop
+                            src={this.state.imgData}
+                            crop={this.state.cropSettings}
+                            onChange={(crop, pixelCrop) => { this.setState({ cropSettings: crop, pixelCrop: pixelCrop }) }}
+                            />
+                        <div className="cropper__buttons">
+                            {this.state.pixelCrop &&
+                                <Button
+                                    type="primary"
+                                    onClick={() => this.createImgCrop(this.state.imgData, this.state.pixelCrop, 'img') }>
+                                    Crop </Button>
+                            }
+                        </div>
                     </div>
                     :
-                    <div className="upload-img">
-                        <Button type="primary" onClick={() => this.getImageCrop()}>
-                            Crop Image </Button>
-                        <Button
-                            onClick={() => this.clearCropper()}>
-                            Clear </Button>
+                    <div className="cropper__buttons">
+                        <input
+                            type="file"
+                            accept=".png,.jpg"
+                            onChange={(e) => this.handleUpload(e)}/>
                     </div>
                 }
             </div>
@@ -55,42 +57,18 @@ class CroppingTool extends React.Component {
         const reader = new FileReader();
         reader.onload = function() {
             var dataURL = reader.result;
-            app.setState({ image: dataURL });
-            app.initializeCropper();
+            app.setState({ imgData: dataURL });
         }
         reader.readAsDataURL(input.files[0]);
     }
 
-    clearCropper() {
-        let image = this.state.imagePreview;
-        if (image) {
-            image.cropper.destroy();
-            image.src = ""
-        }
-        this.setState({ imagePreview: null });
+    async createImgCrop(image, pixelCrop, fileName) {
+        let img = new Image();
+        img.src = image;
+        let croppedImage = await getCroppedImg(img, pixelCrop, fileName);
+        console.log(croppedImage);
     }
 
-    initializeCropper() {
-        this.clearCropper();
-        const image = document.getElementById('imagePreview');
-        new Cropper(image, {
-            aspectRatio: 1 / 1,
-            cropBoxResizable: false,
-            minCanvasHeight: 300,
-            minCanvasWidth: 300,
-            minContainerHeight: 300,
-            minContainerWidth: 300
-        });
-        this.setState({ imagePreview: image });
-    }
-
-    getImageCrop() {
-        let image = this.state.imagePreview;
-        let canvas = image.cropper.getCroppedCanvas();
-        canvas.toBlob((blob) => {
-            console.log(blob);
-        });
-    }
 }
 
 module.exports = CroppingTool;

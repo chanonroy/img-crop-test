@@ -1,24 +1,15 @@
-@import '~cropperjs/dist/cropper.min.css';
+@import '~react-image-crop/lib/ReactCrop.scss';
 
 body {
     margin: 0;
     font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
 }
 
-.cropper-preview {
-    width: 500px;
+.cropper {
+    max-width: 980px;
     margin: 40px auto;
-    img {
-        max-width: 100%;
-    }
-}
-
-.upload-img {
     text-align: center;
-    &__input {
-        display: none;
-    }
-    .el-button {
-        margin-right: 8px;
+    &__buttons {
+        margin: 40px 0;
     }
 }
