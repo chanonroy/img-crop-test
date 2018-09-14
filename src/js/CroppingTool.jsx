@@ -10,7 +10,7 @@ class CroppingTool extends React.Component {
 
         this.state = {
             imgData: null,
-            pixelCrop: {},
+            pixelCrop: null,
             cropSettings: {
                 aspect: 1 / 1,
             }
@@ -18,9 +18,11 @@ class CroppingTool extends React.Component {
 
         this.handleUpload = this.handleUpload.bind(this);
         this.createImgCrop = this.createImgCrop.bind(this);
+        this.clearImg = this.clearImg.bind(this);
     }
 
     render() {
+        const hasCrop = this.state.pixelCrop && this.state.pixelCrop.height > 0;
         return (
             <div className="cropper">
                 {this.state.imgData ?
@@ -31,12 +33,14 @@ class CroppingTool extends React.Component {
                             onChange={(crop, pixelCrop) => { this.setState({ cropSettings: crop, pixelCrop: pixelCrop }) }}
                             />
                         <div className="cropper__buttons">
-                            {this.state.pixelCrop &&
-                                <Button
-                                    type="primary"
-                                    onClick={() => this.createImgCrop(this.state.imgData, this.state.pixelCrop, 'img') }>
-                                    Crop </Button>
-                            }
+                            <Button
+                                type="primary"
+                                disabled={!hasCrop}
+                                onClick={() => this.createImgCrop(this.state.imgData, this.state.pixelCrop, 'img') }>
+                                Crop Image </Button>
+                            <Button onClick={() => this.clearImg()}>
+                                Reset
+                            </Button>
                         </div>
                     </div>
                     :
@@ -67,6 +71,16 @@ class CroppingTool extends React.Component {
         img.src = image;
         let croppedImage = await getCroppedImg(img, pixelCrop, fileName);
         console.log(croppedImage);
+    }
+
+    clearImg() {
+        this.setState({
+            imgData: null,
+            pixelCrop: null,
+            cropSettings: {
+                aspect: 1 / 1,
+            }
+        })
     }
 
 }
